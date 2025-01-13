@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity ^0.8.21;
 
 import "./IERC165.sol";
@@ -10,40 +9,40 @@ import "./String.sol";
 
 contract ERC721 is IERC721, IERC721Metadata
 {
-  // Using the "Strings" Library
+  // Using the "Strings" Library.
   using Strings for uint256;
 
-  // Token name
+  // Token name.
   string public override name;
 
-  // Token symbol
+  // Token symbol.
   string public override symbol;
 
-  // mapping of holder from "tokenId" to owner address
+  // mapping of holder from "tokenId" to owner address.
   mapping(uint => address) private _owners;
 
-  // mapping from owner address to "Open Interest"
+  // mapping from owner address to "Open Interest".
   mapping(address => uint) private _balances;
 
-  // mapping from "tokenId" to address approved by owner
+  // mapping from "tokenId" to address approved by owner.
   mapping(uint => address) private _tokenApprovals;
 
-  // mapping from owner address to operator address(volume licensing)
+  // mapping from owner address to operator address(volume licensing).
   mapping(address => mapping(address => bool)) private _operatorApprovals;
 
-  // error, Invalid receiver
+  // error, Invalid receiver.
   error ERC721InvalidReceiver(address receiver);
 
   /**
-   * constructor, initialize 'name' and 'symbol'
+   * constructor, initialize 'name' and 'symbol'.
    **/
-  construct(string memory name_, string memory symbol_)
+  constructor(string memory name_, string memory symbol_)
   {
     name = name_;
     symbol = symbol_;
   }
 
-  // Implement func "supportsInterface" of IERC165 interface
+  // Implement func "supportsInterface" of IERC165 interface.
   function supportsInterface(bytes4 interfaceId) external pure override returns(bool)
   {
     return
@@ -52,21 +51,21 @@ contract ERC721 is IERC721, IERC721Metadata
       interfaceId == type(IERC721Metadata).interfaceId;
   }
 
-  // Implement func "balanceOf" of IERC721, use variable "_balances" to search balance of owner address
+  // Implement func "balanceOf" of IERC721, use variable "_balances" to search balance of owner address.
   function balanceOf(address owner) external view override returns(uint)
   {
     require(owner != address(0), "owner = zero address");
     return _balances[owner];
   }
 
-  // Implement func "ownerOf" of IERC721, use variable "_owners" to search owner of "tokenId"
+  // Implement func "ownerOf" of IERC721, use variable "_owners" to search owner of "tokenId".
   function ownerOf(uint tokenId) public view override returns(address owner)
   {
     owner = _owners[tokenId];
     require(owner != address(0), "token doesn't exist");
   }
 
-  // Implement func "isApprovedForAll" of IERC721, Use the "_operatorApprovals" variable to query
+  // Implement func "isApprovedForAll" of IERC721, Use the "_operatorApprovals" variable to query -
   // whether the owner address has authorized the NFTs held by it to the operator address in batches.
   function isApprovedForAll(address owner, address operator)
     external
@@ -77,21 +76,24 @@ contract ERC721 is IERC721, IERC721Metadata
     return _operatorApprovals[owner][operator];
   }
 
-  // Implement func "setApprovalForAll" of IERC721, Authorize all tokens held to the "operator" address. Call the _operatorApprovals function
+  // Implement func "setApprovalForAll" of IERC721, Authorize all tokens held to the "operator" address.
+  // Call the _operatorApprovals function.
   function setApprovalForAll(address operator, bool approved) external override
   {
     _operatorApprovals[msg.sender][operator] = approved;
     emit ApprovalForAll(msg.sender, operator, approved);
   }
 
-  // Implement func "getApproved" of IERC721, use variable "_tokenApprovals" to search approved address of "tokenId"
+  // Implement func "getApproved" of IERC721,
+  // use variable "_tokenApprovals" to search approved address of "tokenId".
   function getApproved(uint tokenId) external view override returns (address)
   {
     require(_owners[tokenId] != address(0), "token doesn't exist");
     return _tokenApprovals[tokenId];
   }
 
-  // Authorization function, approved address "to" to operator tokenId by adjusting "_tokenApprovals", the same time, the "Approval" event is released
+  // Authorization function, approved address "to" to operator tokenId by adjusting "_tokenApprovals",
+  // the same time, the "Approval" event is released.
   function _approve(address owner, address to, uint tokenId) private
   {
     _tokenApprovals[tokenId] = to;
@@ -99,10 +101,11 @@ contract ERC721 is IERC721, IERC721Metadata
   }
   
   /**
-   * Implement func "approve" of IERC721, approved tokenId to address "to", this function will call func "_approve"
+   * Implement func "approve" of IERC721, approved tokenId to address "to",
+   * this function will call func "_approve".
    * Condition:
-   * 1. "to" is not "owner"
-   * 2. "msg.sender" is owner or approved address(operator)
+   * 1. "to" is not "owner";
+   * 2. "msg.sender" is owner or approved address(operator).
    **/
   function approve(address to, uint tokenId) external override
   {
@@ -114,7 +117,7 @@ contract ERC721 is IERC721, IERC721Metadata
     _approve(owner, to, tokenId);
   }
 
-  // To search if "spender" address can use "tokenId" (spender should be owner or approved address)
+  // To search if "spender" address can use "tokenId" (spender should be owner or approved address).
   function _isApprovedOrOwner(
     address owner,
     address spender,
@@ -127,10 +130,11 @@ contract ERC721 is IERC721, IERC721Metadata
   }
 
   /**
-   * Transfer function, by adjusting variable "_balances" and "_owner" to transfer tokenId from "from" to "to", release "Transfer" event at the same time
+   * Transfer function, by adjusting variable "_balances" and "_owner" to transfer tokenId from "from" to "to",
+   * release "Transfer" event at the same time.
    * Condition:
-   * 1. "tokenId" is owned by address "from"
-   * 2. "to" is not 0 address
+   * 1. "tokenId" is owned by address "from";
+   * 2. "to" is not 0 address.
    **/
   function _transfer(
     address owner,
@@ -150,7 +154,8 @@ contract ERC721 is IERC721, IERC721Metadata
     emit Transfer(from, to, tokenId);
   }
 
-  // Implement func "transferFrom" of IERC721 (Non-secure transfers, not recommended), call funciton "_transfer"
+  // Implement func "transferFrom" of IERC721 (Non-secure transfers, not recommended),
+  // call funciton "_transfer".
   function transferFrom(address from, address to, uint tokenId) external override
   {
     address owner = ownerOf(tokenId);
@@ -162,19 +167,19 @@ contract ERC721 is IERC721, IERC721Metadata
   }
 
   /**
-   * Secure transfers, safely transfer tokenId from "from" to "to" address
-   * The contract recipient will be checked to see if they understand the ERC721 protocol to prevent tokens from being permanently locked
-   * call function "_transfer" and "_checkOnERC721Received"
+   * Secure transfers, safely transfer tokenId from "from" to "to" address.
+   * The contract recipient will be checked to see if they understand the ERC721 protocol to prevent tokens from being permanently locked.
+   * call function "_transfer" and "_checkOnERC721Received".
    * Condition:
-   * 1. "from" is not address 0
-   * 2. "to" is not address 0
-   * 3. if "to" is smart contract, it must support "IERC721Receiver-onERC721Received"
+   * 1. "from" is not address 0;
+   * 2. "to" is not address 0;
+   * 3. if "to" is smart contract, it must support "IERC721Receiver-onERC721Received".
    **/
   function _safeTransfer(
     address owner,
     address from,
     address to,
-    uint tokenId
+    uint tokenId,
     bytes memory _data
   ) private
   {
@@ -182,7 +187,7 @@ contract ERC721 is IERC721, IERC721Metadata
     _checkOnERC721Received(from, to, tokenId, _data);
   }
 
-  // Implement func "safeTransferFrom" of IERC721, Secure transfers, call function _safeTransfer
+  // Implement func "safeTransferFrom" of IERC721, Secure transfers, call function _safeTransfer.
   function safeTransferFrom(
     address from,
     address to,
@@ -195,7 +200,7 @@ contract ERC721 is IERC721, IERC721Metadata
       "not owner nor approved"
     );
     
-    _transfer(owner, from, to, tokenId, _data);
+    _safeTransfer(owner, from, to, tokenId, _data);
   }
 
   // Function "safeTransferFrom" overloading
@@ -282,7 +287,8 @@ contract ERC721 is IERC721, IERC721Metadata
 
   // Calculate the BaseURI of {tokenURI}, where tokenURI is the concatenation of baseURI and tokenId
   // The baseURI of BAYC is ipfs://QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/
-  function _baseURI() internal view virtual returns (string memory)
+  function _baseURI() internal view virtual returns(string memory)
   {
     return "";
   }
+}
