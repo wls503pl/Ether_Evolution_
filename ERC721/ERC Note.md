@@ -8,10 +8,10 @@ otherwise it will revert. The IERC721Receiver interface only contains one "onERC
 
 In order to prevent NFTs from being transferred to a contract that is not capable of operating NFTs, the target must correctly implement the "ERC721TokenReceiver" interface:<br>
 <hr>
-interface ERC721TokenReceiver
-{
-    function onERC721Received(address _operator, address _from, uint256 _tokenId, bytes _data) external returns(bytes4);
-}
+interface ERC721TokenReceiver<br>
+{<br>
+    function onERC721Received(address _operator, address _from, uint256 _tokenId, bytes _data) external returns(bytes4);<br>
+}<br>
 <hr>
 Expanding to the world of programming languages, whether it is Java's interface or Rust's Trait (of course, in Solidity, what is more similar to trait is library), as long as it is related to interface,<br>
 it reveals such a meaning: interface is a collection of certain behaviors(even more so in Solidity, the interface is completely equivalent to a collection of function selectors)<br>
@@ -32,21 +32,21 @@ Take the "ERC721" contract as an example. When an external party checks whether 
 the checking steps should be to first check whether the contract implements ERC165, and then check other specific interfaces implemented by the contract. At this time,
 the specific interface is IERC721. IERC721 is the basic interface of ERC721 (why it is basic, because there are other extensions such as "ERC721Metadata" and "ERC721Enumerable"):<br>
 <hr>
-//  **⚠⚠⚠ Note: the ERC-165 identifier for this interface is 0x80ac58cd. ⚠⚠⚠**
-interface ERC721 /* is ERC165 */ {
-    event Transfer(address indexed _from, address indexed _to, uint256 indexed _tokenId);
-    event Approval(address indexed _owner, address indexed _approved, uint256 indexed _tokenId);
-    event ApprovalForAll(address indexed _owner, address indexed _operator, bool _approved);
-    function balanceOf(address _owner) external view returns (uint256);
-    function ownerOf(uint256 _tokenId) external view returns (address);
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes data) external payable;
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external payable;
-    function transferFrom(address _from, address _to, uint256 _tokenId) external payable;
-    function approve(address _approved, uint256 _tokenId) external payable;
-    function setApprovalForAll(address _operator, bool _approved) external;
-    function getApproved(uint256 _tokenId) external view returns (address);
-    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
-}
+//  **⚠⚠⚠ Note: the ERC-165 identifier for this interface is 0x80ac58cd. ⚠⚠⚠**<br>
+interface ERC721 /* is ERC165 */ {<br>
+    event Transfer(address indexed _from, address indexed _to, uint256 indexed _tokenId);<br>
+    event Approval(address indexed _owner, address indexed _approved, uint256 indexed _tokenId);<br>
+    event ApprovalForAll(address indexed _owner, address indexed _operator, bool _approved);<br>
+    function balanceOf(address _owner) external view returns (uint256);<br>
+    function ownerOf(uint256 _tokenId) external view returns (address);<br>
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes data) external payable;<br>
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external payable;<br>
+    function transferFrom(address _from, address _to, uint256 _tokenId) external payable;<br>
+    function approve(address _approved, uint256 _tokenId) external payable;<br>
+    function setApprovalForAll(address _operator, bool _approved) external;<br>
+    function getApproved(uint256 _tokenId) external view returns (address);<br>
+    function isApprovedForAll(address _owner, address _operator) external view returns (bool);<br>
+}<br>
 <hr>
 0x80ac58cd = bytes4(keccak256(ERC721.Transfer.selector) ^ keccak256(ERC721.Approval.selector) ^ ··· ^keccak256(ERC721.isApprovedForAll.selector)), which is the calculation method specified by ERC165.
 
@@ -54,26 +54,26 @@ Then, similarly, the interface of ERC165 itself can be calculated (its interface
 and "bytes4(keccak256(supportsInterface.selector))" is used to get 0x01ffc9a7.<br>
 In addition, ERC721 also defines some extended interfaces, such as "IERC721Metadata":<br>
 <hr>
-//  Note: the ERC-165 identifier for this interface is 0x5b5e139f.
-interface ERC721Metadata /* is ERC721 */
-{
-    function name() external view returns (string _name);
-    function symbol() external view returns (string _symbol);
-    function tokenURI(uint256 _tokenId) external view returns (string);
-}
+//  Note: the ERC-165 identifier for this interface is 0x5b5e139f.<br>
+interface ERC721Metadata /* is ERC721 */<br>
+{<br>
+    function name() external view returns (string _name);<br>
+    function symbol() external view returns (string _symbol);<br>
+    function tokenURI(uint256 _tokenId) external view returns (string);<br>
+}<br>
 <hr>
 The calculation of 0x5b5e139f is:
 IERC721Metadata.name.selector ^ IERC721Metadata.symbol.selector ^ IERC721Metadata.tokenURI.selector
 
 Solamte’s ERC721.sol implements these ERC165 requirements in this way:<br>
 <hr>
-function supportsInterface(bytes4 interfaceId) public view virtual returns(bool)
-{
-  return
-    interfaceId == 0x01ffc9a7 ||      // ERC165 Interface ID for ERC165
-    interfaceId == 0x80ac58cd ||      // ERC165 Interface ID for ERC721
-    interfaceId == 0x5b5e139f;        // ERC165 Interface ID for ERC721Metadata
-}
+function supportsInterface(bytes4 interfaceId) public view virtual returns(bool)<br>
+{<br>
+  return<br>
+    interfaceId == 0x01ffc9a7 ||      // ERC165 Interface ID for ERC165<br>
+    interfaceId == 0x80ac58cd ||      // ERC165 Interface ID for ERC721<br>
+    interfaceId == 0x5b5e139f;        // ERC165 Interface ID for ERC721Metadata<br>
+}<br>
 <hr>
 
 Yes, it is that simple. When the outside world follows the steps in link1 to check whether this contract implements 165,
@@ -84,13 +84,13 @@ When the outside world wants to check whether this contract implements the ERC72
 And because the function is virtual, the user of the contract can inherit the contract and continue to implement the ERC721Enumerable interface. After implementing functions such as totalSupply,
 reimplement the inherited supportsInterface as:
 <hr>
-function supportsInterface(bytes4 interfaceId) public view virtual returns(bool)
-{
-  return
-    interfaceId == 0x01ffc9a7 ||      // ERC165 Interface ID for ERC165
-    interfaceId == 0x80ac58cd ||      // ERC165 Interface ID for ERC721
-    interfaceId == 0x5b5e139f ||      // ERC165 Interface ID for ERC721Metadata
-    interfaceId == 0x780e9d63;        // ERC165 Interface ID for ERC721Enumerable
-}
+function supportsInterface(bytes4 interfaceId) public view virtual returns(bool)<br>
+{<br>
+  return<br>
+    interfaceId == 0x01ffc9a7 ||      // ERC165 Interface ID for ERC165<br>
+    interfaceId == 0x80ac58cd ||      // ERC165 Interface ID for ERC721<br>
+    interfaceId == 0x5b5e139f ||      // ERC165 Interface ID for ERC721Metadata<br>
+    interfaceId == 0x780e9d63;        // ERC165 Interface ID for ERC721Enumerable<br>
+}<br>
 <hr>
 Elegant, simple, and fully scalable.
