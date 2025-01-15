@@ -23,14 +23,14 @@ Dutch auctions provide an efficient price discovery mechanism, particularly suit
 
 ## Deploy Contract
 
-First, we should set Auction Start Time, we use Unix time as input.
+First, we should set Auction Start Time, we use Unix time as input.<br>
 From this link: [Unix Time Switch](https://tool.chinaz.com/tools/unixtime.aspx)
 <br>
 We set UTCTime，2025-1-15 15:55:00 as Auction start time, and change it to Unix Time.
 ![UTC Time to Unix Time](https://github.com/wls503pl/Ether_Evolution_/blob/ee/DutchAuction/img/unixTime.png)
 <br>
 <hr>
-Set "Unix Time" as timestamp, and deploy contract.
+Set "Unix Time" as timestamp, here is 1736927700, and deploy contract.
 <br>
 ![Deploy Contract](https://github.com/wls503pl/Ether_Evolution_/blob/ee/DutchAuction/img/setAuctionStartTime.png)
 <br>
