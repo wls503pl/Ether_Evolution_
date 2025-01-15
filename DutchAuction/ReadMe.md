@@ -1,4 +1,4 @@
-#concept
+# concept
 
 A Dutch auction is a type of auction where the price starts high and then gradually decreases until a buyer is willing to accept the current price.<br>
 Here are some key points about a Dutch auction:<br>
@@ -19,3 +19,31 @@ Here are some key points about a Dutch auction:<br>
 - Traditional auctions (such as English auctions) usually start with a low price and gradually increase the price until there are no higher bids.<br>
 
 Dutch auctions provide an efficient price discovery mechanism, particularly suitable for market environments that require rapid decision-making.
+<hr>
+
+## Deploy Contract
+
+First, we should set Auction Start Time, we use Unix time as input.
+From this link: [Unix Time Switch](https://tool.chinaz.com/tools/unixtime.aspx)
+<br>
+We set UTCTime，2025-1-15 15:55:00 as Auction start time, and change it to Unix Time.
+![UTC Time to Unix Time](https://github.com/wls503pl/Ether_Evolution_/blob/ee/DutchAuction/img/unixTime.png)
+<br>
+<hr>
+Set "Unix Time" as timestamp, and deploy contract.
+<br>
+![Deploy Contract](https://github.com/wls503pl/Ether_Evolution_/blob/ee/DutchAuction/img/setAuctionStartTime.png)
+<br>
+<hr>
+
+uint256 public constant COLLECTION_SIZE = 10000;  // NFT total quantity <br>
+uint256 public constant AUCTION_START_PRICE = 1 ether;  // Starting Price <br>
+uint256 public constant AUCTION_END_PRICE = 0.1 ether;  // End price (lowest price) <br>
+uint256 public constant AUCTION_TIME = 10 minutes;  // The auction time is set to 10 minutes for testing purposes <br>
+uint256 public constant AUCTION_DROP_INTERVAL = 1 minutes;  // How long does it take for the price to decay? <br>
+
+// Each price decay step
+uint256 public constant AUCTION_DROP_PER_STEP = (AUCTION_START_PRICE - AUCTION_END_PRICE) / (AUCTION_TIME / AUCTION_DROP_INTERVAL); <br>
+
+We could see We can see that every 1 minute, the auction price decreases by AUCTION_DROP_PER_STEP.
+![Auction Price Changes](https://github.com/wls503pl/Ether_Evolution_/blob/ee/DutchAuction/img/AuctionPriceChanges.png)<br>
