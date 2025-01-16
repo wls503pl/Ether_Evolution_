@@ -77,6 +77,12 @@ contract MerkleTree is ERC721
     // Record the minted address
     mapping(address => bool) public mintedAddress;
 
+    // Constructor to initialize the name, code, and Merkle tree root of the NFT collection
+    constructor(string memory name, string memory symbol, bytes32 merkleroot) ERC721(name, symbol)
+    {
+        root = merkleroot;
+    }
+
     // Use the Merkle book to verify the address and mint
     function mint(address account, uint256 tokenId, bytes32[] calldata proof) external
     {
