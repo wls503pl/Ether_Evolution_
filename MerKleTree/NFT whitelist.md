@@ -19,14 +19,14 @@ proof = [   "0x999bf57501565dbd2fdcea36efa2b9aef8340a8901e3459f4a4c926275d36cdb"
 <br>
 ![Merkle Proof](https://github.com/wls503pl/Ether_Evolution_/blob/ee/MerKleTree/img/MerKleDeploy.png)
 <br>
-<hr>
+
 ![Mint]([https://github.com/wls503pl/Ether_Evolution_/blob/ee/MerKleTree/img/mint.png)
-<hr>
+
 <br>
 We can use the "ownerOf" function to verify that the NFT with tokenId 0 has been minted to address 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4, and the contract has run successfully!
-<hr>
+
 ![OwnerOfToken0](https://github.com/wls503pl/Ether_Evolution_/blob/ee/MerKleTree/img/ownerOfToken0.png)
-<hr>
+
 <br>
 At this point, if the mint function is called again, although the address can pass the Merkle Proof verification, since the address has been recorded in mintedAddress, the transaction will be terminated due to "Already minted!"
 ![Already Mint](https://github.com/wls503pl/Ether_Evolution_/blob/ee/MerKleTree/img/AlreadyMint.png)
