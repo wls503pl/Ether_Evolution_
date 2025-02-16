@@ -3,7 +3,7 @@
 An automated market maker (AMM) is an algorithm, or a smart contract that runs on a blockchain, that allows decentralized trading between digital assets.
 The introduction of AMMs has created a new way of trading that does not require traditional buyers and sellers to match orders,
 but instead creates a liquidity pool through a preset mathematical formula (e.g., a constant product formula) that allows users to trade at any time.<br>
-![]()<br><br>
+![AMM](https://github.com/wls503pl/Ether_Evolution_/blob/ee/DEX/img/amm.png)<br><br>
 
 Let's take the market of Coke (COLA) and US dollar (USD) as an example to introduce AMM. For convenience, we define the following symbols: x and y represent the total amount of Coke and USD in the market, Δx and Δy represent the change in Coke and USD in a transaction, and L and ΔL represent the total liquidity and change in liquidity.
 
@@ -57,9 +57,9 @@ Liquidity providers provide liquidity to the market, allowing traders to obtain 
 First, we need to implement the function of adding liquidity. When a user adds liquidity to the token pool, the contract needs to record the added LP share.<br>
 According to Uniswap V2, the LP share is calculated as follows:
 1. When liquidity is first added to a token pool, the LP share ΔL is determined by the square root of the product of the number of tokens added.<br>
-   ![]()<br>
+   ![deltaL](https://github.com/wls503pl/Ether_Evolution_/blob/ee/DEX/img/deltaL.png)<br>
 2. When adding liquidity (not the first time) the LP share is determined by the ratio of the number of added tokens to the pool token reserves (the smaller ratio of the two tokens is taken)<br>
-   ![]()<br>
+   ![removeLiquidity](https://github.com/wls503pl/Ether_Evolution_/blob/ee/DEX/img/removeLiquidity.png)<br>
 
 Because the **SimpleSwap** contract inherits the ERC20 token standard, after calculating the LP share, the share can be minted to the user in the form of tokens.
 The following ***addLiquidity()*** function implements the function of adding liquidity. The main steps are as follows:
