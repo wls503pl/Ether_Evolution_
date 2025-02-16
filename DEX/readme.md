@@ -235,7 +235,3 @@ function swap(uint amountIn, IERC20 tokenIn, uint amountOutMin) external returns
     emit Swap(msg.sender, amountIn, address(tokenIn), amountOut, address(tokenOut));
 }
 ```
-
-<hr>
-
-# Remix Reproduction
