@@ -160,3 +160,82 @@ At this point, the functions related to liquidity providers in the contract are 
 
 ## Exchange
 
+In the Swap contract, users can use one token to trade for another. So how many units of token1 can I exchange with Δx units of token0? Let's do a simple deduction.
+According to the constant product formula, before the transaction:
+***\"k = x ∗ y\"*** <br>
+After the transaction, we have:
+***\"k = (x+Δx) ∗ (y+Δy)\"*** <br>
+The k value remains unchanged before and after the transaction. Combining the above equations, we can get:
+***\"Δy = −(Δx ∗ y) / (x + Δx)\"***
+
+Therefore, the amount of tokens that can be exchanged, Δy, is determined by Δx, x, and y. Note that Δx and Δy have opposite signs, because transfers in increase the token reserve, while transfers out decrease it.
+The following ***getAmountOut()*** implementation calculates the amount of an asset to be exchanged for another token given the amount of an asset and the reserves of a token pair.
+```
+// Given the amount of an asset and the reserves of a token pair, calculate the amount of another token to exchange
+function getAmountOut(uint amountIn, uint reserveIn, uint reserveOut) public pure returns (uint amountOut) {
+    require(amountIn > 0, 'INSUFFICIENT_AMOUNT');
+    require(reserveIn > 0 && reserveOut > 0, 'INSUFFICIENT_LIQUIDITY');
+    amountOut = amountIn * reserveOut / (reserveIn + amountIn);
+}
+```
+
+With this core formula, we can start implementing the trading function. The following swap() function implements the function of trading tokens. The main steps are as follows:
+1. When calling the function, the user specifies the number of tokens to be exchanged, the exchange token address, and the minimum amount of another token to be exchanged.
+2. Determine whether token0 is exchanged for token1, or token1 is exchanged for token0.
+3. Using the above formula, calculate the number of tokens exchanged.
+4. Determine whether the exchanged tokens have reached the minimum number specified by the user, which is similar to the slippage of the transaction.
+5. Transfer the user's tokens into the contract.
+6. Transfer the exchanged tokens from the contract to the user.
+7. Update the contract's token reserves.
+8. Releases the Swap event.
+```
+// Swap token
+// @param amountIn The amount of tokens to exchange
+// @param tokenIn The token contract address used for exchange
+// @param amountOutMin The minimum amount of another token to be exchanged
+function swap(uint amountIn, IERC20 tokenIn, uint amountOutMin) external returns (uint amountOut, IERC20 tokenOut)
+{
+    require(amountIn > 0, "INSUFFICIENT_OUTPUT_AMOUNT");
+    require(tokenIn == token0 || tokenIn == token1, 'INVALID_TOKEN');
+
+    uint balance0 = token0.balanceOf(address(this));
+    uint balance1 = token1.balanceOf(address(this));
+
+    if (tokenIn == token0)
+    {
+        // If tokenIn is token0, exchange it for token1
+        tokenOut = token1;
+
+        // Calculate the number of token1 that can be exchanged
+        amountOut = getAmountOut(amountIn, balance0, balance1);
+        require(amountOut > amountOutMin, 'INSUFFICIENT_OUTPUT_AMOUNT');
+
+        // Swap
+        tokenIn.transferFrom(msg.sender, address(this), amountIn);
+        tokenOut.transfer(msg.sender, amountOut);
+    }
+    else
+    {
+        // If tokenIn is token1, exchange it for token0
+        tokenOut = token0;
+
+        // Calculate the number of token1 that can be exchanged
+        amountOut = getAmountOut(amountIn, balance1, balance0);
+        require(amountOut > amountOutMin, 'INSUFFICIENT_OUTPUT_AMOUNT');
+
+        // Swap
+        tokenIn.transferFrom(msg.sender, address(this), amountIn);
+        tokenOut.transfer(msg.sender, amountOut);
+    }
+
+    // Update the reserve amount
+    reserve0 = token0.balanceOf(address(this));
+    reserve1 = token1.balanceOf(address(this));
+
+    emit Swap(msg.sender, amountIn, address(tokenIn), amountOut, address(tokenOut));
+}
+```
+
+<hr>
+
+# Remix Reproduction
