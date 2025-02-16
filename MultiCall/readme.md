@@ -19,16 +19,38 @@ The contract contains only one function, which is used to perform multiple calls
 # Remix Reproduction
 
 - **Step1**: Deploy a very simple ERC20 token contract MCERC20 and record the contract address.
-![]()<br><br>
 
 - **Step2**: Deploy **MultiCall** contract.
-![]()<br><br>
 
 - **Step3**: Get the calldata to be called. We will mint 50 and 100 units of tokens to two addresses respectively. Fill in the parameters of ***mint()*** on the call page of remix, and then click the Calldata button to copy the encoded calldata.<br>
   Example:
+  
+  ![]()<br><br>
+
+  Input address for token mined, and token amount:
   ```
   to: 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4
   amount: 50
-  calldata: 0x40c10f190000000000000000000000005b38da6a701c568545dcfcb03fcb875f56beddc40000000000000000000000000000000000000000000000000000000000000032
   ```
   
+  Calldata should be:
+  ```
+  calldata: 0x40c10f190000000000000000000000005b38da6a701c568545dcfcb03fcb875f56beddc40000000000000000000000000000000000000000000000000000000000000032
+  ```
+
+- **Step4**: Use MultiCall's ***multicall()*** function to call the ***mint()*** function of the ERC20 token contract to mint 50 and 100 tokens to two addresses respectively.<br>
+  Example:
+
+  ```
+  [["0x0fC5025C764cE34df352757e82f7B5c4Df39A836", true, "0x40c10f190000000000000000000000005b38da6a701c568545dcfcb03fcb875f56beddc40000000000000000000000000000000000000000000000000000000000000032"], ["0x0fC5025C764cE34df352757e82f7B5c4Df39A836", false, "0x40c10f19000000000000000000000000ab8483f64d9c6d1ecf9b849ae677dd3315835cb20000000000000000000000000000000000000000000000000000000000000064"]]
+
+  ```
+
+  ![]()<br><br>
+
+- **Step5**: Use MultiCall's ***multicall()*** function to call the ***balanceOf()*** function of the ERC20 token contract to query the balances of the two addresses just minted. The selector of the ***balanceOf()*** function is **0x70a08231***.<br>
+Example:
+
+  ```
+  [["0x0fC5025C764cE34df352757e82f7B5c4Df39A836", true, "0x70a082310000000000000000000000005b38da6a701c568545dcfcb03fcb875f56beddc4"], ["0x0fC5025C764cE34df352757e82f7B5c4Df39A836", false, "0x70a08231000000000000000000000000ab8483f64d9c6d1ecf9b849ae677dd3315835cb2"]]
+  ```
