@@ -235,3 +235,29 @@ function swap(uint amountIn, IERC20 tokenIn, uint amountOutMin) external returns
     emit Swap(msg.sender, amountIn, address(tokenIn), amountOut, address(tokenOut));
 }
 ```
+
+<hr>
+
+# Remix Demo
+
+- **Step1**: Deploy two ERC20 token contracts (token0 and token1) and record their contract addresses.
+  ![]()<br><br>
+
+- **Step2**: Deploy the SimpleSwap contract and fill in the token address above.
+  ![]()<br><br>
+
+- **Step3**: Call the ***approve()*** function of two ERC20 tokens to authorize 1000 units of tokens to the SimpleSwap contract respectively.
+  ![]()<br><br>
+
+- **Step4**: Call the ***addLiquidity()*** function of the \"SimpleSwap\" contract to add liquidity to the exchange, adding 100 units to token0 and token1 respectively.
+  ![]()<br><br>
+
+- **Step5**: Call the ***balanceOf()*** function of the \"SimpleSwap\" contract to check the user's LP share, which should be 100. ($\sqrt{100*100}=100$).
+  ![]()<br><br>
+
+- **Step6**: Call the ***swap()*** function of the \"SimpleSwap\" contract to trade tokens, using 100 units of token0.
+  ![]()<br><br>
+
+- **Step7**: Call the **reserve0** and **reserve1** functions of the \"SimpleSwap\" contract to view the token reserves in the contract, which should be **200** and **50**. In the previous step, we used 100 units of token0 to exchange 50 units of token 1 ($\frac{100*100}{100+100}=50$).
+  ![]()<br><br>
+
