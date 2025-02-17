@@ -241,23 +241,24 @@ function swap(uint amountIn, IERC20 tokenIn, uint amountOutMin) external returns
 # Remix Demo
 
 - **Step1**: Deploy two ERC20 token contracts (token0 and token1) and record their contract addresses.
-  ![]()<br><br>
+  ![token0Deploy](https://github.com/wls503pl/Ether_Evolution_/blob/ee/DEX/img/token0Deploy.png)<br>
+  ![token1Deploy](https://github.com/wls503pl/Ether_Evolution_/blob/ee/DEX/img/token1Deploy.png)<br><br>
 
 - **Step2**: Deploy the SimpleSwap contract and fill in the token address above.
-  ![]()<br><br>
+  ![deploySimpleSwap](https://github.com/wls503pl/Ether_Evolution_/blob/ee/DEX/img/deploySimpleSwap.png)<br><br>
 
 - **Step3**: Call the ***approve()*** function of two ERC20 tokens to authorize 1000 units of tokens to the SimpleSwap contract respectively.
-  ![]()<br><br>
+  ![ERC20Approve](https://github.com/wls503pl/Ether_Evolution_/blob/ee/DEX/img/ERC20Approve.png)<br><br>
 
 - **Step4**: Call the ***addLiquidity()*** function of the \"SimpleSwap\" contract to add liquidity to the exchange, adding 100 units to token0 and token1 respectively.
-  ![]()<br><br>
+  ![addLiquidity](https://github.com/wls503pl/Ether_Evolution_/blob/ee/DEX/img/addLiquidity.png)<br><br>
 
 - **Step5**: Call the ***balanceOf()*** function of the \"SimpleSwap\" contract to check the user's LP share, which should be 100. ($\sqrt{100*100}=100$).
-  ![]()<br><br>
+  ![LPShare_sqrt100_100](https://github.com/wls503pl/Ether_Evolution_/blob/ee/DEX/img/LPShare_sqrt100_100.png)<br><br>
 
 - **Step6**: Call the ***swap()*** function of the \"SimpleSwap\" contract to trade tokens, using 100 units of token0.
-  ![]()<br><br>
+  ![SimpleSwap_swap](https://github.com/wls503pl/Ether_Evolution_/blob/ee/DEX/img/SimpleSwap_swap.png)<br><br>
 
 - **Step7**: Call the **reserve0** and **reserve1** functions of the \"SimpleSwap\" contract to view the token reserves in the contract, which should be **200** and **50**. In the previous step, we used 100 units of token0 to exchange 50 units of token 1 ($\frac{100*100}{100+100}=50$).
-  ![]()<br><br>
+  ![reserve0_1](https://github.com/wls503pl/Ether_Evolution_/blob/ee/DEX/img/reserve0_1.png)<br><br>
 
