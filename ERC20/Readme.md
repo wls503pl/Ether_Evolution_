@@ -27,7 +27,7 @@ IERC20 defines two events: Transfer event and Approval event, which are released
 event Transfer(address indexed from, address indexed to, uint256 value);
 
 /**
- * @dev Release condition: when the currency of `value` unit is transferred from an account (`from`) to another account (`to`).
+ * @dev Release condition: when the currency of `value` unit is approved from an account (`owner`) to another account (`spender`).
  */
 event Approval(address indexed owner, address indexed spender, uint256 value);
 ```
